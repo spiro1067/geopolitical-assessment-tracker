@@ -1,0 +1,125 @@
+{
+  "iranian_collapse": {
+    "title": "Iranian Government Collapse",
+    "question": "What is the likelihood of a collapse of the Iranian government in the next 3 months?",
+    "horizon": "3 months",
+    "current_probability": 20,
+    "current_descriptor": "Unlikely",
+    "confidence": "Medium",
+    "key_drivers": [
+      "Major currency devaluation (30%)",
+      "Senior IRGC commander defected",
+      "Regional isolation deepening"
+    ],
+    "key_uncertainties": [
+      "Popular uprising threshold",
+      "External intervention likelihood"
+    ],
+    "indicator_status": {
+      "Supreme Leader health/succession signals": "\ud83d\udfe1 Watch",
+      "IRGC elite cohesion": "\ud83d\udfe1 Watch",
+      "Protest frequency and size": "\ud83d\udfe1 Watch",
+      "Economic conditions (sanctions impact, inflation)": "\ud83d\udd34 Critical",
+      "Regional isolation vs support": "\ud83d\udfe2 Stable"
+    },
+    "last_updated": "2026-01-11",
+    "next_review": "2026-01-18",
+    "notes": "Trend continuing upward, watching for inflection point"
+  },
+  "ukraine_agreement": {
+    "title": "Russia-Ukraine Political Agreement",
+    "question": "What is the likelihood of a durable political agreement in the Russian-Ukraine war in the next 3 months?",
+    "horizon": "3 months",
+    "current_probability": 20,
+    "current_descriptor": "Unlikely",
+    "confidence": "Medium",
+    "key_drivers": [
+      "Zelensky rejected territorial concessions",
+      "US signals continued support",
+      "Russian domestic stability maintained"
+    ],
+    "key_uncertainties": [
+      "European resolve through winter",
+      "2026 election impacts (US, Russia)"
+    ],
+    "indicator_status": {
+      "Battlefield momentum": "\ud83d\udfe2 Stable",
+      "Western military/financial support": "\ud83d\udfe2 Stable",
+      "Russian domestic politics": "\ud83d\udfe2 Stable",
+      "Ukrainian position (maximalist vs realist)": "\ud83d\udd34 Critical",
+      "Third-party mediation efforts": "\ud83d\udfe1 Watch"
+    },
+    "last_updated": "2026-01-11",
+    "next_review": "2026-01-18",
+    "notes": "Both sides appear committed to military solution for now"
+  },
+  "taiwan_invasion": {
+    "title": "Taiwan Invasion",
+    "question": "What is the likelihood of an invasion of Taiwan by China in the next 6 months?",
+    "horizon": "6 months",
+    "current_probability": 15,
+    "current_descriptor": "Unlikely",
+    "confidence": "Medium",
+    "key_drivers": [
+      "Record PLA incursions into ADIZ",
+      "CCP plenum emphasized reunification timeline",
+      "Semiconductor export controls tightening"
+    ],
+    "key_uncertainties": [
+      "Winter weather window closing",
+      "Trump administration Taiwan policy"
+    ],
+    "indicator_status": {
+      "PLA readiness signals": "\ud83d\udd34 Critical",
+      "US commitment credibility": "\ud83d\udfe1 Watch",
+      "CCP internal politics": "\ud83d\udfe1 Watch",
+      "Taiwan domestic politics": "\ud83d\udfe2 Stable",
+      "Economic costs assessment": "\ud83d\udfe2 Stable"
+    },
+    "last_updated": "2026-01-11",
+    "next_review": "2026-01-25",
+    "notes": "Trend line concerning but still unlikely in 6-month window"
+  },
+  "venezuela_civil_war": {
+    "title": "Venezuela Civil War",
+    "question": "What is the likelihood of civil war in Venezuela in the next 3 months?",
+    "horizon": "3 months",
+    "current_probability": null,
+    "current_descriptor": null,
+    "confidence": null,
+    "key_drivers": [],
+    "key_uncertainties": [],
+    "indicator_status": {},
+    "last_updated": null,
+    "next_review": null,
+    "notes": ""
+  },
+  "food_security_crisis": {
+    "title": "Global Food Security Crisis",
+    "question": "What is the likelihood of two major agricultural regions facing harvest reduction due to extreme weather within 6 months?",
+    "horizon": "6 months",
+    "current_probability": null,
+    "current_descriptor": null,
+    "confidence": null,
+    "key_drivers": [],
+    "key_uncertainties": [],
+    "indicator_status": {},
+    "last_updated": null,
+    "next_review": null,
+    "notes": ""
+  },
+  "greenland_control": {
+    "title": "US Control of Greenland",
+    "question": "What is the likelihood of the United States obtaining de facto political control of Greenland in the next 6 months?",
+    "horizon": "6 months",
+    "current_probability": null,
+    "current_descriptor": null,
+    "confidence": null,
+    "key_drivers": [],
+    "key_uncertainties": [],
+    "indicator_status": {},
+    "last_updated": null,
+    "next_review": null,
+    "notes": ""
+  }
+}

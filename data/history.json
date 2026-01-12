@@ -1,0 +1,178 @@
+{
+  "iranian_collapse": [
+    {
+      "date": "2025-12-21",
+      "probability": 12,
+      "descriptor": "Unlikely",
+      "confidence": "Medium",
+      "change": null,
+      "drivers": [
+        "Economic sanctions impact intensifying",
+        "Limited elite defection signals"
+      ],
+      "uncertainties": [
+        "Supreme Leader health status unknown",
+        "IRGC internal cohesion unclear"
+      ],
+      "notes": "Initial assessment based on current economic pressure"
+    },
+    {
+      "date": "2025-12-28",
+      "probability": 15,
+      "descriptor": "Unlikely",
+      "confidence": "Medium",
+      "change": 3,
+      "drivers": [
+        "New EU sanctions package announced",
+        "Reports of elite discontent emerging",
+        "Protest activity increasing in major cities"
+      ],
+      "uncertainties": [
+        "IRGC loyalty threshold unknown",
+        "Regional support (Russia/China) sustainability"
+      ],
+      "notes": "Slight uptick due to new sanctions and protest indicators"
+    },
+    {
+      "date": "2026-01-04",
+      "probability": 18,
+      "descriptor": "Unlikely",
+      "confidence": "Medium",
+      "change": 3,
+      "drivers": [
+        "Currency collapse accelerating",
+        "Elite defection reports confirmed",
+        "Protest movement showing organization"
+      ],
+      "uncertainties": [
+        "Military willingness to use force",
+        "International response to crackdown"
+      ],
+      "notes": "Economic deterioration faster than expected"
+    },
+    {
+      "date": "2026-01-11",
+      "probability": 20,
+      "descriptor": "Unlikely",
+      "confidence": "Medium",
+      "change": 2,
+      "drivers": [
+        "Major currency devaluation (30%)",
+        "Senior IRGC commander defected",
+        "Regional isolation deepening"
+      ],
+      "uncertainties": [
+        "Popular uprising threshold",
+        "External intervention likelihood"
+      ],
+      "notes": "Trend continuing upward, watching for inflection point"
+    }
+  ],
+  "venezuela_civil_war": [],
+  "ukraine_agreement": [
+    {
+      "date": "2025-12-21",
+      "probability": 25,
+      "descriptor": "Unlikely",
+      "confidence": "Low",
+      "change": null,
+      "drivers": [
+        "Both sides showing war fatigue",
+        "Western support questions emerging"
+      ],
+      "uncertainties": [
+        "Trump administration policy direction",
+        "Russian territorial demands",
+        "Ukrainian domestic politics"
+      ],
+      "notes": "Initial baseline - highly uncertain situation"
+    },
+    {
+      "date": "2025-12-28",
+      "probability": 22,
+      "descriptor": "Unlikely",
+      "confidence": "Low",
+      "change": -3,
+      "drivers": [
+        "Ukrainian counteroffensive stalling",
+        "Russian defensive lines holding"
+      ],
+      "uncertainties": [
+        "Winter offensive potential",
+        "Western ammunition supply"
+      ],
+      "notes": "Battlefield stalemate reduces negotiation pressure"
+    },
+    {
+      "date": "2026-01-11",
+      "probability": 20,
+      "descriptor": "Unlikely",
+      "confidence": "Medium",
+      "change": -2,
+      "drivers": [
+        "Zelensky rejected territorial concessions",
+        "US signals continued support",
+        "Russian domestic stability maintained"
+      ],
+      "uncertainties": [
+        "European resolve through winter",
+        "2026 election impacts (US, Russia)"
+      ],
+      "notes": "Both sides appear committed to military solution for now"
+    }
+  ],
+  "taiwan_invasion": [
+    {
+      "date": "2025-12-14",
+      "probability": 8,
+      "descriptor": "Remote/Highly Unlikely",
+      "confidence": "Medium",
+      "change": null,
+      "drivers": [
+        "Economic costs prohibitive",
+        "PLA readiness questionable"
+      ],
+      "uncertainties": [
+        "Xi decision-making under pressure",
+        "US commitment credibility"
+      ],
+      "notes": "Baseline assessment for 6-month horizon"
+    },
+    {
+      "date": "2025-12-28",
+      "probability": 12,
+      "descriptor": "Unlikely",
+      "confidence": "Medium",
+      "change": 4,
+      "drivers": [
+        "PLA exercises intensifying around Taiwan",
+        "Nationalist rhetoric increasing in state media",
+        "US political dysfunction raising questions"
+      ],
+      "uncertainties": [
+        "Taiwan election results impact",
+        "US carrier group deployment"
+      ],
+      "notes": "Concerning signals from PLA activities"
+    },
+    {
+      "date": "2026-01-11",
+      "probability": 15,
+      "descriptor": "Unlikely",
+      "confidence": "Medium",
+      "change": 3,
+      "drivers": [
+        "Record PLA incursions into ADIZ",
+        "CCP plenum emphasized reunification timeline",
+        "Semiconductor export controls tightening"
+      ],
+      "uncertainties": [
+        "Winter weather window closing",
+        "Trump administration Taiwan policy"
+      ],
+      "notes": "Trend line concerning but still unlikely in 6-month window"
+    }
+  ],
+  "food_security_crisis": [],
+  "greenland_control": []
+}
