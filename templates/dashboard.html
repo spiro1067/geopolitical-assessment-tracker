@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Tracker Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>📊 Assessment Tracker Dashboard</h1>
+            <p class="subtitle">Real-time risk assessment monitoring</p>
+            <div class="last-updated">Last updated: {{ current_date }}</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Status Overview -->
+        <section class="status-overview">
+            <div class="stat-card">
+                <div class="stat-value">{{ status.total_topics }}</div>
+                <div class="stat-label">Total Topics</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ status.assessed_count }}</div>
+                <div class="stat-label">Assessed</div>
+            </div>
+            <div class="stat-card {% if status.overdue_count > 0 %}stat-warning{% endif %}">
+                <div class="stat-value">{{ status.overdue_count }}</div>
+                <div class="stat-label">Overdue</div>
+            </div>
+            <div class="stat-card {% if status.due_soon_count > 0 %}stat-info{% endif %}">
+                <div class="stat-value">{{ status.due_soon_count }}</div>
+                <div class="stat-label">Due Soon</div>
+            </div>
+        </section>
+
+        <!-- Alerts -->
+        {% if status.overdue_count > 0 %}
+        <section class="alert alert-danger">
+            <h3>🔴 Overdue Assessments</h3>
+            <ul>
+                {% for item in status.overdue %}
+                <li>
+                    <strong>{{ item.title }}</strong>
+                    {% if item.days_overdue %}
+                    - {{ item.days_overdue }} days overdue
+                    {% else %}
+                    - Never assessed
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+        {% if status.due_soon_count > 0 %}
+        <section class="alert alert-warning">
+            <h3>🟡 Due Soon (within 3 days)</h3>
+            <ul>
+                {% for item in status.due_soon %}
+                <li><strong>{{ item.title }}</strong> - Due in {{ item.days_until }} days</li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+        <!-- Assessment Cards -->
+        <section class="assessments-section">
+            <h2>Current Assessments</h2>
+            <div class="assessment-grid">
+                {% for assessment in assessments %}
+                <div class="assessment-card {{ assessment.risk_class }}">
+                    <div class="card-header">
+                        <h3>{{ assessment.title }}</h3>
+                        <div class="horizon-badge">{{ assessment.horizon }}</div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="probability-section">
+                            {% if assessment.probability is not none %}
+                            <div class="probability-display">
+                                <div class="probability-value">{{ assessment.probability }}%</div>
+                                <div class="probability-bar">
+                                    <div class="probability-fill" style="width: {{ assessment.probability }}%; background-color: {{ assessment.risk_color }}"></div>
+                                </div>
+                            </div>
+                            <div class="risk-badge" style="background-color: {{ assessment.risk_color }}">
+                                {{ assessment.risk_level }}
+                            </div>
+                            {% else %}
+                            <div class="not-assessed-message">Not yet assessed</div>
+                            {% endif %}
+                        </div>
+
+                        {% if assessment.probability is not none %}
+                        <div class="metadata">
+                            <div class="meta-item">
+                                <span class="meta-label">Confidence:</span>
+                                <span class="meta-value">{{ assessment.confidence }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Last Updated:</span>
+                                <span class="meta-value">{{ assessment.last_updated }}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Next Review:</span>
+                                <span class="meta-value">{{ assessment.next_review }}</span>
+                            </div>
+                            {% if assessment.trend %}
+                            <div class="meta-item">
+                                <span class="meta-label">Trend:</span>
+                                <span class="trend-indicator trend-{{ assessment.trend }}">
+                                    {% if assessment.trend == 'up' %}↗ Increasing
+                                    {% elif assessment.trend == 'down' %}↘ Decreasing
+                                    {% else %}→ Stable{% endif %}
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-footer">
+                        <a href="/topic/{{ assessment.key }}" class="btn-detail">View Details →</a>
+                        {% if assessment.history_count > 0 %}
+                        <span class="history-count">{{ assessment.history_count }} updates</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons">
+                <button onclick="location.reload()" class="btn btn-primary">🔄 Refresh Data</button>
+                <button onclick="window.open('/api/assessments', '_blank')" class="btn btn-secondary">📊 API Data</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Assessment Tracker Dashboard v2.0 | Data updates automatically on page refresh</p>
+            <p>Run <code>python3 tracker.py update</code> to update assessments</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

@@ -18,6 +18,11 @@ A comprehensive system for maintaining ongoing risk assessments with automated w
 ✅ **Comparison Views** - All topics side-by-side in one chart
 ✅ **Comprehensive Reports** - Weekly summary with risk levels and trends
 
+### Web Dashboard
+✅ **Interactive Dashboard** - Real-time web interface with charts and status cards
+✅ **Mobile Responsive** - Works on desktop, tablet, and mobile devices
+✅ **REST API** - JSON endpoints for integration with other tools
+
 ### Data Export & Notifications
 ✅ **CSV Export** - Export all data for spreadsheet analysis
 ✅ **Markdown Reports** - Generate shareable documentation
@@ -29,11 +34,22 @@ A comprehensive system for maintaining ongoing risk assessments with automated w
 
 ### Prerequisites
 
+**For CLI usage only:**
 ```bash
 pip install matplotlib --break-system-packages
 ```
 
-No other dependencies needed - uses Python standard library!
+**For web dashboard (includes matplotlib):**
+```bash
+pip install -r requirements.txt --break-system-packages
+```
+
+Or install individually:
+```bash
+pip install matplotlib Flask --break-system-packages
+```
+
+Core functionality uses Python standard library only!
 
 ### Setup
 
@@ -201,6 +217,42 @@ python3 tracker.py notify --email-config email_config.json
 }
 ```
 
+### Web Dashboard
+
+**Start the interactive web dashboard:**
+```bash
+python3 tracker.py dashboard
+```
+
+The dashboard will start at http://127.0.0.1:5000 by default.
+
+**Custom port and host:**
+```bash
+python3 tracker.py dashboard --port 8080 --host 0.0.0.0
+```
+
+**Dashboard Features:**
+- **Real-time overview**: Visual status cards showing total topics, assessed count, overdue, and due-soon
+- **Risk-level cards**: Color-coded assessment cards showing current probabilities
+- **Interactive charts**: Click on any topic to see detailed timeline charts
+- **Trend indicators**: Visual arrows showing if probabilities are increasing/decreasing
+- **Mobile responsive**: Works on desktop, tablet, and mobile devices
+- **API endpoints**: JSON data available at `/api/assessments` and `/api/topic/<key>`
+
+The dashboard automatically reads from your `data/` directory and displays current assessments. Refresh the page to see the latest data after running updates.
+
+**Alternative: Run dashboard directly:**
+```bash
+python3 dashboard.py                    # Start with defaults
+python3 dashboard.py --port 8080        # Custom port
+python3 dashboard.py --host 0.0.0.0     # Allow external connections
+```
+
+**Dashboard Requirements:**
+```bash
+pip install Flask --break-system-packages
+```
+
 ## Pre-configured Topics
 
 The tracker includes these 6 standard questions (stored in `data/topics.json`):
@@ -221,12 +273,22 @@ Each includes pre-defined key indicators to track.
 ```
 assessment-tracker/
 ├── tracker.py              # Main tracking script (includes all functionality)
+├── dashboard.py            # Web dashboard server
 ├── visualize.py            # Legacy visualization script (still works)
 ├── create_demo.py          # Demo data generator
+├── requirements.txt        # Python dependencies
 ├── data/
 │   ├── topics.json         # Topic configuration (customizable!)
 │   ├── assessments.json    # Current assessments database
 │   └── history.json        # Historical log of all changes
+├── templates/              # HTML templates for web dashboard
+│   ├── dashboard.html      # Main dashboard view
+│   └── topic_detail.html   # Topic detail view
+├── static/                 # Static assets for web dashboard
+│   ├── css/
+│   │   └── dashboard.css   # Dashboard styles
+│   └── js/
+│       └── dashboard.js    # Dashboard interactivity
 └── visualizations/         # Generated charts (PNG files)
 ```
 
@@ -508,6 +570,7 @@ This tracker complements your geopolitical risk analysis skill:
 ## Recent Enhancements (v2.0)
 
 ✅ **Completed Features:**
+- ✅ **Interactive Web Dashboard** - Real-time browser-based interface (NEW!)
 - ✅ Custom topic management (add/edit/remove topics)
 - ✅ Integrated visualization (no separate script needed)
 - ✅ CSV and Markdown export
@@ -523,9 +586,10 @@ Potential additions:
 - [ ] PDF report generation (native, not markdown conversion)
 - [ ] Automated source collection integration
 - [ ] Confidence interval bands on charts
-- [ ] Dashboard web interface
-- [ ] API endpoint for external integrations
+- [ ] Real-time dashboard updates (WebSocket support)
+- [ ] User authentication for dashboard
 - [ ] Mobile app for quick updates
+- [ ] Multi-user collaboration features
 
 ## Data Backup
 

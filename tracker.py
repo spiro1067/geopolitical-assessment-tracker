@@ -28,6 +28,10 @@ Notifications:
     python3 tracker.py notify               # Send desktop notification for overdue items
     python3 tracker.py notify --email-config config.json  # Send email reminder
     python3 tracker.py status --check-overdue  # Check and notify for overdue assessments
+
+Web Dashboard:
+    python3 tracker.py dashboard            # Start interactive web dashboard (default: http://127.0.0.1:5000)
+    python3 tracker.py dashboard --port 8080 --host 0.0.0.0  # Custom port and host
 """
 
 import json
@@ -1167,7 +1171,7 @@ def main():
     parser = argparse.ArgumentParser(description="Automated Weekly Assessment Tracker")
     parser.add_argument('command', choices=['update', 'view', 'history', 'visualize', 'report',
                                            'status', 'export', 'weekly', 'notify', 'add-topic',
-                                           'edit-topic', 'remove-topic', 'list-topics'],
+                                           'edit-topic', 'remove-topic', 'list-topics', 'dashboard'],
                        help="Command to execute")
     parser.add_argument('topic', nargs='?', help="Specific topic (for view/history/update/visualize)")
     parser.add_argument('--data-dir', default='./data', help="Data directory path")
@@ -1178,6 +1182,10 @@ def main():
     parser.add_argument('--email-config', help="Path to email configuration JSON file")
     parser.add_argument('--check-overdue', action='store_true',
                        help="Check for overdue assessments and send notifications")
+    parser.add_argument('--port', type=int, default=5000,
+                       help="Port for dashboard server (default: 5000)")
+    parser.add_argument('--host', default='127.0.0.1',
+                       help="Host for dashboard server (default: 127.0.0.1)")
 
     args = parser.parse_args()
 
@@ -1272,6 +1280,17 @@ def main():
 
     elif args.command == 'list-topics':
         tracker.list_topics()
+
+    elif args.command == 'dashboard':
+        # Start the web dashboard
+        import subprocess
+        print(f"\nStarting web dashboard on http://{args.host}:{args.port}")
+        print("Press Ctrl+C to stop the server\n")
+        subprocess.run([
+            sys.executable, 'dashboard.py',
+            '--host', args.host,
+            '--port', str(args.port)
+        ])
 
 
 if __name__ == "__main__":

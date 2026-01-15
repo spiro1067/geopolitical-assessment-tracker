@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ topic.title }} - Assessment Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">← Back to Dashboard</a>
+            </nav>
+            <h1>{{ topic.title }}</h1>
+            <p class="subtitle">{{ topic.question }}</p>
+            <div class="last-updated">Last updated: {{ current_date }}</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Current Assessment Summary -->
+        <section class="detail-summary">
+            <div class="summary-card">
+                <h2>Current Assessment</h2>
+                {% if assessment.current_probability is not none %}
+                <div class="current-probability">
+                    <div class="prob-display-large">
+                        <span class="prob-value">{{ assessment.current_probability }}%</span>
+                        <span class="prob-descriptor">{{ assessment.current_descriptor }}</span>
+                    </div>
+                    <div class="risk-badge-large" style="background-color: {{ risk.color }}">
+                        {{ risk.level }}
+                    </div>
+                </div>
+
+                <div class="detail-metadata">
+                    <div class="detail-meta-item">
+                        <strong>Confidence:</strong> {{ assessment.confidence }}
+                    </div>
+                    <div class="detail-meta-item">
+                        <strong>Time Horizon:</strong> {{ topic.horizon }}
+                    </div>
+                    <div class="detail-meta-item">
+                        <strong>Last Updated:</strong> {{ assessment.last_updated }}
+                    </div>
+                    <div class="detail-meta-item">
+                        <strong>Next Review:</strong> {{ assessment.next_review }}
+                    </div>
+                </div>
+
+                {% if assessment.key_drivers %}
+                <div class="drivers-section">
+                    <h3>Key Drivers</h3>
+                    <ul class="drivers-list">
+                        {% for driver in assessment.key_drivers %}
+                        <li>{{ driver }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if assessment.key_uncertainties %}
+                <div class="uncertainties-section">
+                    <h3>Critical Uncertainties</h3>
+                    <ul class="uncertainties-list">
+                        {% for uncertainty in assessment.key_uncertainties %}
+                        <li>{{ uncertainty }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if assessment.notes %}
+                <div class="notes-section">
+                    <h3>Notes</h3>
+                    <p>{{ assessment.notes }}</p>
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="not-assessed-message">This topic has not been assessed yet.</div>
+                {% endif %}
+            </div>
+
+            {% if assessment.indicator_status %}
+            <div class="summary-card">
+                <h2>Indicator Status</h2>
+                <div class="indicators-grid">
+                    {% for indicator, status in assessment.indicator_status.items() %}
+                    <div class="indicator-item">
+                        <div class="indicator-status
+                            {% if 'Stable' in status or '🟢' in status %}status-stable
+                            {% elif 'Watch' in status or '🟡' in status %}status-watch
+                            {% elif 'Critical' in status or '🔴' in status %}status-critical
+                            {% else %}status-unknown{% endif %}">
+                        </div>
+                        <div class="indicator-label">{{ indicator }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Probability Timeline Chart -->
+        {% if history and history|length > 0 %}
+        <section class="chart-section">
+            <h2>Probability Timeline</h2>
+            <div class="chart-container">
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </section>
+
+        <!-- History Table -->
+        <section class="history-section">
+            <h2>Assessment History</h2>
+            <div class="history-table-container">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Probability</th>
+                            <th>Change</th>
+                            <th>Confidence</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in history|reverse %}
+                        <tr>
+                            <td>{{ entry.date }}</td>
+                            <td>
+                                <span class="prob-cell">{{ entry.probability }}%</span>
+                                <span class="descriptor-cell">{{ entry.descriptor }}</span>
+                            </td>
+                            <td>
+                                {% if entry.change is not none %}
+                                <span class="change-cell {% if entry.change > 0 %}change-up{% elif entry.change < 0 %}change-down{% else %}change-stable{% endif %}">
+                                    {% if entry.change > 0 %}↗ +{{ entry.change }}%
+                                    {% elif entry.change < 0 %}↘ {{ entry.change }}%
+                                    {% else %}→ 0%{% endif %}
+                                </span>
+                                {% else %}
+                                <span class="change-cell change-initial">Initial</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ entry.confidence }}</td>
+                            <td class="notes-cell">{{ entry.notes or '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        {% else %}
+        <section class="no-history">
+            <p>No historical data available for this topic yet.</p>
+        </section>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Assessment Tracker Dashboard v2.0</p>
+        </div>
+    </footer>
+
+    <script>
+        // Chart.js Timeline
+        {% if history and history|length > 0 %}
+        const ctx = document.getElementById('timelineChart').getContext('2d');
+        const chartData = {
+            labels: {{ history|map(attribute='date')|list|tojson }},
+            datasets: [{
+                label: 'Probability (%)',
+                data: {{ history|map(attribute='probability')|list|tojson }},
+                borderColor: '{{ risk.color }}',
+                backgroundColor: '{{ risk.color }}33',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Probability Assessment Over Time'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Probability (%)'
+                        },
+                        grid: {
+                            color: '#e0e0e0'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+        {% endif %}
+    </script>
+</body>
+</html>
