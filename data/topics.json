@@ -1,0 +1,74 @@
+{
+  "iranian_collapse": {
+    "title": "Iranian Government Collapse",
+    "question": "What is the likelihood of a collapse of the Iranian government in the next 3 months?",
+    "horizon": "3 months",
+    "key_indicators": [
+      "Supreme Leader health/succession signals",
+      "IRGC elite cohesion",
+      "Protest frequency and size",
+      "Economic conditions (sanctions impact, inflation)",
+      "Regional isolation vs support"
+    ]
+  },
+  "venezuela_civil_war": {
+    "title": "Venezuela Civil War",
+    "question": "What is the likelihood of civil war in Venezuela in the next 3 months?",
+    "horizon": "3 months",
+    "key_indicators": [
+      "Military loyalty/fragmentation",
+      "Opposition unity and capability",
+      "Economic collapse severity",
+      "External support (US, China, Russia)",
+      "Humanitarian crisis scale"
+    ]
+  },
+  "ukraine_agreement": {
+    "title": "Russia-Ukraine Political Agreement",
+    "question": "What is the likelihood of a durable political agreement in the Russian-Ukraine war in the next 3 months?",
+    "horizon": "3 months",
+    "key_indicators": [
+      "Battlefield momentum",
+      "Western military/financial support",
+      "Russian domestic politics",
+      "Ukrainian position (maximalist vs realist)",
+      "Third-party mediation efforts"
+    ]
+  },
+  "taiwan_invasion": {
+    "title": "Taiwan Invasion",
+    "question": "What is the likelihood of an invasion of Taiwan by China in the next 6 months?",
+    "horizon": "6 months",
+    "key_indicators": [
+      "PLA readiness signals",
+      "US commitment credibility",
+      "CCP internal politics",
+      "Taiwan domestic politics",
+      "Economic costs assessment"
+    ]
+  },
+  "food_security_crisis": {
+    "title": "Global Food Security Crisis",
+    "question": "What is the likelihood of two major agricultural regions facing harvest reduction due to extreme weather within 6 months?",
+    "horizon": "6 months",
+    "key_indicators": [
+      "Climate event probability (ENSO, droughts)",
+      "Key agricultural region status",
+      "Existing food security stress",
+      "Conflict disruption to agriculture",
+      "Export restrictions/protectionism"
+    ]
+  },
+  "greenland_control": {
+    "title": "US Control of Greenland",
+    "question": "What is the likelihood of the United States obtaining de facto political control of Greenland in the next 6 months?",
+    "horizon": "6 months",
+    "key_indicators": [
+      "Trump administration policy signals",
+      "Danish government response",
+      "Greenlandic domestic politics",
+      "NATO dynamics",
+      "Chinese/Russian Arctic activity"
+    ]
+  }
+}

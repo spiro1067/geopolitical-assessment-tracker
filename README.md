@@ -1,16 +1,29 @@
 # Automated Weekly Assessment Tracker
 
-A system for maintaining ongoing geopolitical risk assessments with automated weekly updates, historical tracking, and probability timeline visualizations.
+A comprehensive system for maintaining ongoing risk assessments with automated weekly updates, historical tracking, visualizations, and custom topic management.
 
 ## Features
 
-✅ **Track 6 Standard Questions** - Pre-configured for your most common analyses  
-✅ **Weekly Update Workflow** - Guided prompts to update assessments  
-✅ **Historical Logging** - Every change tracked with timestamps  
-✅ **Probability Timelines** - Visual charts showing assessment evolution  
-✅ **Indicator Monitoring** - Track status of key indicators (🟢🟡🔴)  
-✅ **Change Detection** - Automatic calculation of probability shifts  
-✅ **Next Review Scheduling** - Never miss an update  
+### Core Functionality
+✅ **Custom Topic Management** - Add, edit, or remove any assessment topics
+✅ **6 Pre-configured Questions** - Standard geopolitical scenarios ready to use
+✅ **Weekly Update Workflow** - Guided prompts to update assessments
+✅ **Historical Logging** - Every change tracked with timestamps
+✅ **Indicator Monitoring** - Track status of key indicators (🟢🟡🔴)
+✅ **Change Detection** - Automatic calculation of probability shifts
+
+### Visualization & Reporting
+✅ **Probability Timelines** - Visual charts showing assessment evolution
+✅ **Current Snapshot Charts** - Color-coded bar charts of all probabilities
+✅ **Comparison Views** - All topics side-by-side in one chart
+✅ **Comprehensive Reports** - Weekly summary with risk levels and trends
+
+### Data Export & Notifications
+✅ **CSV Export** - Export all data for spreadsheet analysis
+✅ **Markdown Reports** - Generate shareable documentation
+✅ **Overdue Tracking** - Status dashboard for due/overdue assessments
+✅ **Email Reminders** - Automated notifications for overdue reviews
+✅ **Desktop Notifications** - System alerts for pending assessments
 
 ## Installation
 
@@ -26,8 +39,10 @@ No other dependencies needed - uses Python standard library!
 
 1. Place the tracker files in your working directory
 2. The system will automatically create necessary directories:
-   - `data/` - Stores assessments and history
+   - `data/` - Stores assessments, history, and topic configurations
    - `visualizations/` - Generated charts
+
+**Note:** On first run, the system will create `data/topics.json` with the 6 standard questions. You can modify this file directly or use the topic management commands.
 
 ## Quick Start
 
@@ -60,64 +75,135 @@ The system will:
 
 ## Usage Guide
 
-### View Current Assessments
+### Core Assessment Commands
 
-See all current probability assessments:
-
+**View current assessments:**
 ```bash
-python3 tracker.py view
+python3 tracker.py view                    # See all assessments
+python3 tracker.py view iranian_collapse   # View specific topic
 ```
 
-View specific topic:
-
-```bash
-python3 tracker.py view iranian_collapse
-```
-
-### View Historical Changes
-
-See how your assessment has evolved:
-
+**View historical changes:**
 ```bash
 python3 tracker.py history iranian_collapse
 ```
-
-This shows:
+Shows:
 - All past probability assessments
 - Probability changes (↗ increase, ↘ decrease)
 - Key drivers for each update
 - Notes on what changed
 
-### Update Single Assessment
-
-Update just one topic instead of full weekly workflow:
-
+**Update assessments:**
 ```bash
-python3 tracker.py update iranian_collapse
+python3 tracker.py update                  # Weekly workflow (all due topics)
+python3 tracker.py update iranian_collapse # Update single topic
 ```
 
-### Generate Visualizations
-
-Create all charts:
-
+**Check status:**
 ```bash
-python3 visualize.py
+python3 tracker.py status                  # Show overdue/due-soon assessments
+python3 tracker.py status --check-overdue  # Check and send notifications
 ```
 
-This generates:
-- **current_snapshot.png** - Bar chart of current probabilities
-- **{topic}_timeline.png** - Line chart for each topic showing evolution
-- **all_topics_comparison.png** - All topics on one chart
+### Visualization Commands
 
-Generate for specific topic only:
-
+**Generate visualizations:**
 ```bash
-python3 visualize.py --topic iranian_collapse
+python3 tracker.py visualize               # Create all charts
+python3 tracker.py visualize iran_collapse # Chart for specific topic
 ```
 
-## Standard Questions
+Charts generated:
+- **current_snapshot.png** - Bar chart of current probabilities (color-coded by risk level)
+- **{topic}_timeline.png** - Line chart showing probability evolution over time
+- **all_topics_comparison.png** - Multi-panel view of all topics
 
-The tracker includes these pre-configured questions:
+### Reporting Commands
+
+**Generate comprehensive report:**
+```bash
+python3 tracker.py report
+```
+Shows:
+- Status overview (total/assessed/overdue)
+- Current risk levels (grouped by severity)
+- Significant recent changes (±5% or more)
+
+**Weekly workflow (all-in-one):**
+```bash
+python3 tracker.py weekly
+```
+Combines: update → report → visualize in one command
+
+### Export Commands
+
+**Export to CSV:**
+```bash
+python3 tracker.py export --format csv
+python3 tracker.py export --format csv --output my_export.csv
+```
+
+**Export to Markdown:**
+```bash
+python3 tracker.py export --format markdown
+python3 tracker.py export --format markdown --output report.md
+```
+
+### Topic Management Commands
+
+**List all topics:**
+```bash
+python3 tracker.py list-topics
+```
+
+**Add custom topic:**
+```bash
+python3 tracker.py add-topic my_custom_risk
+```
+Prompts for:
+- Title
+- Assessment question
+- Time horizon
+- Key indicators to track
+
+**Edit existing topic:**
+```bash
+python3 tracker.py edit-topic iranian_collapse
+```
+
+**Remove topic:**
+```bash
+python3 tracker.py remove-topic my_old_topic
+```
+Requires typing 'DELETE' to confirm (prevents accidental data loss)
+
+### Notification Commands
+
+**Send desktop notification:**
+```bash
+python3 tracker.py notify
+```
+
+**Send email reminder:**
+```bash
+python3 tracker.py notify --email-config email_config.json
+```
+
+**Email configuration file format** (`email_config.json`):
+```json
+{
+  "smtp_server": "smtp.gmail.com",
+  "smtp_port": 587,
+  "smtp_user": "your_email@gmail.com",
+  "smtp_password": "your_app_password",
+  "from_email": "your_email@gmail.com",
+  "to_email": "recipient@example.com"
+}
+```
+
+## Pre-configured Topics
+
+The tracker includes these 6 standard questions (stored in `data/topics.json`):
 
 1. **iranian_collapse** - Iranian government collapse (3 months)
 2. **venezuela_civil_war** - Venezuela civil war (3 months)
@@ -128,20 +214,30 @@ The tracker includes these pre-configured questions:
 
 Each includes pre-defined key indicators to track.
 
+**You can add your own topics** using `python3 tracker.py add-topic <key>` - the system supports any number of custom assessment questions!
+
 ## File Structure
 
 ```
 assessment-tracker/
-├── tracker.py              # Main tracking script
-├── visualize.py            # Visualization generator
+├── tracker.py              # Main tracking script (includes all functionality)
+├── visualize.py            # Legacy visualization script (still works)
+├── create_demo.py          # Demo data generator
 ├── data/
+│   ├── topics.json         # Topic configuration (customizable!)
 │   ├── assessments.json    # Current assessments database
 │   └── history.json        # Historical log of all changes
-├── visualizations/         # Generated charts (PNG files)
-└── outputs/               # Optional: exported reports
+└── visualizations/         # Generated charts (PNG files)
 ```
 
 ## Data Format
+
+### topics.json
+Defines assessment topics (fully customizable):
+- Topic key (unique identifier)
+- Title and assessment question
+- Time horizon (e.g., "3 months", "6 months")
+- Key indicators to track
 
 ### assessments.json
 Stores current state of each assessment:
@@ -159,7 +255,7 @@ Logs every update with:
 - Key drivers cited
 - Notes on what changed
 
-**Both files are human-readable JSON** - you can view/edit them directly if needed.
+**All files are human-readable JSON** - you can view/edit them directly if needed.
 
 ## Example Workflow
 
@@ -282,59 +378,95 @@ Current probability (1-100): 20
 ### Generating Visualizations
 
 ```bash
-$ python3 visualize.py
+$ python3 tracker.py visualize
 
 ======================================================================
 GENERATING VISUALIZATIONS
 ======================================================================
 
 📊 Creating current snapshot...
-✅ Saved snapshot chart: visualizations/current_snapshot.png
 
 📈 Creating individual timelines...
-   - iranian_collapse
-✅ Saved timeline chart: visualizations/iranian_collapse_timeline.png
-   - venezuela_civil_war
-✅ Saved timeline chart: visualizations/venezuela_civil_war_timeline.png
-   - ukraine_agreement
-✅ Saved timeline chart: visualizations/ukraine_agreement_timeline.png
+   - Iranian Government Collapse
+   - Venezuela Civil War
+   - Russia-Ukraine Political Agreement
 
 📊 Creating comparison chart...
-✅ Saved comparison chart: visualizations/all_topics_comparison.png
 
 ✅ All visualizations generated!
 📁 Output directory: /path/to/visualizations
 ```
 
+### Complete Weekly Workflow
+
+```bash
+$ python3 tracker.py weekly
+
+Starting weekly workflow...
+
+[Interactive update session for due assessments...]
+
+[Comprehensive report showing risk levels and changes...]
+
+[Automatic visualization generation...]
+```
+
 ## Tips for Effective Use
 
-### 1. Consistent Weekly Updates
-- Set a recurring calendar reminder (e.g., Monday 9am)
-- Budget 15 minutes per week
-- Update even if "no change" - this creates valuable time-series data
+### 1. Use the Weekly Command
+```bash
+python3 tracker.py weekly
+```
+One command for complete workflow: update → report → visualize
 
-### 2. Be Specific with Drivers
+### 2. Set Up Automated Reminders
+```bash
+# Add to crontab for Monday 9am email reminder
+0 9 * * 1 cd /path/to/tracker && python3 tracker.py notify --email-config email_config.json
+```
+
+### 3. Check Status Dashboard Regularly
+```bash
+python3 tracker.py status
+```
+Shows overdue and due-soon assessments at a glance
+
+### 4. Be Specific with Drivers
 - Cite concrete events, not vague trends
 - Examples:
   - ✅ "New EU sanctions package announced Jan 10"
   - ❌ "Economic pressure increasing"
 
-### 3. Track Indicator Status Systematically
+### 5. Track Indicator Status Systematically
 - 🟢 Stable: No concerning changes
 - 🟡 Watch: Something to monitor closely
 - 🔴 Critical: Reached concerning threshold
 
-### 4. Document Change Notes
+### 6. Document Change Notes
 - Explain WHY probability shifted
 - This creates institutional memory
 - Useful when reviewing past reasoning
 
-### 5. Generate Visualizations Regularly
-- Run weekly after updates
-- Share charts with decision-makers
-- Include in reports/presentations
+### 7. Export Data for Analysis
+```bash
+# Export to CSV for spreadsheet analysis
+python3 tracker.py export --format csv
 
-### 6. Review History Before Major Decisions
+# Generate markdown report for sharing
+python3 tracker.py export --format markdown
+```
+
+### 8. Customize for Your Needs
+```bash
+# Add custom topics beyond the 6 standards
+python3 tracker.py add-topic supply_chain_risk
+python3 tracker.py add-topic regulatory_change
+
+# List all configured topics
+python3 tracker.py list-topics
+```
+
+### 9. Review History Before Major Decisions
 - Check historical reasoning
 - Identify assumption patterns
 - See what you got right/wrong
@@ -358,18 +490,42 @@ This tracker complements your geopolitical risk analysis skill:
 - Check that data/ directory has assessments.json and history.json
 
 ### Can't remember topic names
-- Run `python3 tracker.py view` to see all available topics
+- Run `python3 tracker.py list-topics` to see all configured topics
+- Run `python3 tracker.py view` to see all current assessments
 - Use tab completion if your shell supports it
+
+### Want to add custom topics
+- Use `python3 tracker.py add-topic <key>` for interactive setup
+- Or edit `data/topics.json` directly
+- Topics can be for any domain (not just geopolitics!)
+
+### Email notifications not working
+- Check your email config JSON file format
+- For Gmail, use an App Password (not regular password)
+- Verify SMTP server and port settings
+- Test with `python3 tracker.py notify --email-config your_config.json`
+
+## Recent Enhancements (v2.0)
+
+✅ **Completed Features:**
+- ✅ Custom topic management (add/edit/remove topics)
+- ✅ Integrated visualization (no separate script needed)
+- ✅ CSV and Markdown export
+- ✅ Comprehensive reporting command
+- ✅ Status dashboard with overdue tracking
+- ✅ Email reminder system
+- ✅ Desktop notifications
+- ✅ Weekly all-in-one workflow command
 
 ## Future Enhancements
 
 Potential additions:
-- [ ] Export to PDF report
-- [ ] Email reminders for due reviews
+- [ ] PDF report generation (native, not markdown conversion)
 - [ ] Automated source collection integration
 - [ ] Confidence interval bands on charts
-- [ ] Custom questions beyond the 6 standard ones
 - [ ] Dashboard web interface
+- [ ] API endpoint for external integrations
+- [ ] Mobile app for quick updates
 
 ## Data Backup
 
