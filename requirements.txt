@@ -1,0 +1,10 @@
+# Assessment Tracker Requirements
+
+# Core visualization
+matplotlib>=3.7.0
+
+# Web dashboard
+Flask>=3.0.0
+
+# Optional: for production deployment
+# gunicorn>=21.0.0
