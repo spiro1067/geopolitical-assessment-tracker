@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Assessment - {{ topic.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">← Back to Dashboard</a>
+            </nav>
+            <h1>Update Assessment</h1>
+            <p class="subtitle">{{ topic.title }}</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="form-section">
+            <div class="form-card">
+                <h2>{{ topic.question }}</h2>
+                <p class="form-subtitle">Time Horizon: {{ topic.horizon }}</p>
+
+                {% if assessment.current_probability is not none %}
+                <div class="previous-assessment">
+                    <h3>Previous Assessment</h3>
+                    <div class="prev-data">
+                        <span class="prev-label">Probability:</span>
+                        <span class="prev-value">{{ assessment.current_probability }}% ({{ assessment.current_descriptor }})</span>
+                    </div>
+                    <div class="prev-data">
+                        <span class="prev-label">Confidence:</span>
+                        <span class="prev-value">{{ assessment.confidence }}</span>
+                    </div>
+                    <div class="prev-data">
+                        <span class="prev-label">Last Updated:</span>
+                        <span class="prev-value">{{ assessment.last_updated }}</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                <form method="POST" action="/update/{{ key }}">
+                    <div class="form-group">
+                        <label for="probability">Probability (1-100):</label>
+                        <input type="number" id="probability" name="probability" min="1" max="100" required
+                               value="{{ assessment.current_probability or '' }}"
+                               placeholder="Enter probability percentage">
+                        <span class="descriptor-preview" id="descriptorPreview"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confidence">Confidence Level:</label>
+                        <select id="confidence" name="confidence" required>
+                            <option value="">Select confidence...</option>
+                            <option value="Low" {% if assessment.confidence == 'Low' %}selected{% endif %}>Low</option>
+                            <option value="Medium" {% if assessment.confidence == 'Medium' %}selected{% endif %}>Medium</option>
+                            <option value="High" {% if assessment.confidence == 'High' %}selected{% endif %}>High</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Key Drivers (factors increasing likelihood):</label>
+                        <input type="text" name="driver1" placeholder="Driver 1" maxlength="200">
+                        <input type="text" name="driver2" placeholder="Driver 2" maxlength="200">
+                        <input type="text" name="driver3" placeholder="Driver 3" maxlength="200">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Critical Uncertainties:</label>
+                        <input type="text" name="uncertainty1" placeholder="Uncertainty 1" maxlength="200">
+                        <input type="text" name="uncertainty2" placeholder="Uncertainty 2" maxlength="200">
+                        <input type="text" name="uncertainty3" placeholder="Uncertainty 3" maxlength="200">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Change Notes:</label>
+                        <textarea id="notes" name="notes" rows="3" placeholder="What drove this assessment or change?"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">💾 Save Assessment</button>
+                        <a href="/" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Assessment Tracker Dashboard v2.1</p>
+        </div>
+    </footer>
+
+    <script>
+        // Update descriptor preview as probability changes
+        const probabilityInput = document.getElementById('probability');
+        const descriptorPreview = document.getElementById('descriptorPreview');
+
+        function getDescriptor(prob) {
+            if (prob < 10) return 'Remote';
+            if (prob < 30) return 'Unlikely';
+            if (prob < 70) return 'Even Chance';
+            if (prob < 90) return 'Likely';
+            return 'Highly Likely';
+        }
+
+        probabilityInput.addEventListener('input', function() {
+            const prob = parseInt(this.value);
+            if (prob >= 1 && prob <= 100) {
+                descriptorPreview.textContent = `(${getDescriptor(prob)})`;
+                descriptorPreview.style.display = 'inline';
+            } else {
+                descriptorPreview.style.display = 'none';
+            }
+        });
+
+        // Trigger on page load if value exists
+        if (probabilityInput.value) {
+            probabilityInput.dispatchEvent(new Event('input'));
+        }
+    </script>
+</body>
+</html>

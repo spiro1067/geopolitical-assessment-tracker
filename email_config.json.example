@@ -1,0 +1,20 @@
+{
+  "smtp_server": "smtp.gmail.com",
+  "smtp_port": 587,
+  "smtp_user": "your_email@gmail.com",
+  "smtp_password": "your_gmail_app_password",
+  "from_email": "your_email@gmail.com",
+  "notes": [
+    "For Gmail, you need to create an App Password:",
+    "1. Go to https://myaccount.google.com/apppasswords",
+    "2. Select 'Mail' and 'Other (Custom name)'",
+    "3. Name it 'Assessment Tracker'",
+    "4. Copy the 16-character password and use it above",
+    "",
+    "For other email providers:",
+    "- Update smtp_server and smtp_port accordingly",
+    "- Common ports: 587 (TLS), 465 (SSL), 25 (plain)",
+    "",
+    "Rename this file to 'email_config.json' after filling in your details"
+  ]
+}

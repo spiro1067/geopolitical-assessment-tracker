@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Custom Topic - Assessment Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">← Back to Dashboard</a>
+            </nav>
+            <h1>Add Custom Topic</h1>
+            <p class="subtitle">Create a new assessment question to track</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="form-section">
+            <div class="form-card">
+                <h2>New Topic Configuration</h2>
+                <p class="form-subtitle">Define a custom assessment question for ongoing tracking</p>
+
+                <form method="POST" action="/add-topic">
+                    <div class="form-group">
+                        <label for="topic_key">Topic Key (unique identifier):</label>
+                        <input type="text" id="topic_key" name="topic_key" required
+                               pattern="[a-z0-9_]+"
+                               placeholder="e.g., supply_chain_risk"
+                               title="Use lowercase letters, numbers, and underscores only">
+                        <small>Use lowercase letters, numbers, and underscores (e.g., my_custom_risk)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                        <input type="text" id="title" name="title" required
+                               placeholder="e.g., Supply Chain Disruption"
+                               maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="question">Assessment Question:</label>
+                        <textarea id="question" name="question" rows="3" required
+                                  placeholder="What is the likelihood of... in the next X months?"
+                                  maxlength="500"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="horizon">Time Horizon:</label>
+                        <input type="text" id="horizon" name="horizon" required
+                               placeholder="e.g., 3 months, 6 months, 1 year"
+                               maxlength="50">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Key Indicators (things to monitor):</label>
+                        <small>Add at least one indicator to track</small>
+                        <input type="text" name="indicator1" placeholder="Indicator 1" maxlength="200" required>
+                        <input type="text" name="indicator2" placeholder="Indicator 2" maxlength="200">
+                        <input type="text" name="indicator3" placeholder="Indicator 3" maxlength="200">
+                        <input type="text" name="indicator4" placeholder="Indicator 4" maxlength="200">
+                        <input type="text" name="indicator5" placeholder="Indicator 5" maxlength="200">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">➕ Create Topic</button>
+                        <a href="/" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Assessment Tracker Dashboard v2.1</p>
+        </div>
+    </footer>
+</body>
+</html>
