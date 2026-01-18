@@ -236,6 +236,8 @@ python3 tracker.py dashboard --port 8080 --host 0.0.0.0
 - **Risk-level cards**: Color-coded assessment cards showing current probabilities
 - **Interactive charts**: Click on any topic to see detailed timeline charts
 - **Trend indicators**: Visual arrows showing if probabilities are increasing/decreasing
+- **Update assessments**: Click "Update Assessment" button on any card to update directly from the web
+- **Add custom topics**: Click "Add Custom Topic" button to create new assessment questions
 - **Mobile responsive**: Works on desktop, tablet, and mobile devices
 - **API endpoints**: JSON data available at `/api/assessments` and `/api/topic/<key>`
 
@@ -251,6 +253,77 @@ python3 dashboard.py --host 0.0.0.0     # Allow external connections
 **Dashboard Requirements:**
 ```bash
 pip install Flask --break-system-packages
+```
+
+### Automated Weekly Email Reminders
+
+The tracker includes an automated email reminder system that sends weekly notifications for overdue assessments.
+
+**Setup automated weekly emails:**
+
+1. **Create email configuration:**
+```bash
+cp email_config.json.example email_config.json
+nano email_config.json  # Edit with your SMTP details
+```
+
+2. **Test the email reminder:**
+```bash
+python3 weekly_reminder.py
+```
+
+3. **Set up automated weekly schedule:**
+```bash
+./setup_weekly_reminder.sh
+```
+
+The setup script will:
+- Test your email configuration
+- Ask when you want reminders sent (e.g., Monday 9 AM)
+- Configure a cron job to send automated emails
+- Create a log file for tracking sent emails
+
+**Email Recipients:**
+Weekly reminders are automatically sent to:
+- alan.tkleung@gmail.com
+- alan@tkstrat.net
+
+**What's included in the weekly reminder:**
+- List of all overdue assessments (past due date)
+- List of assessments due soon (within 3 days)
+- Days overdue for each assessment
+- Instructions for updating assessments via dashboard or CLI
+
+**Manual email test:**
+```bash
+python3 weekly_reminder.py
+```
+
+**Email Configuration Example:**
+```json
+{
+  "smtp_server": "smtp.gmail.com",
+  "smtp_port": 587,
+  "smtp_user": "your_email@gmail.com",
+  "smtp_password": "your_gmail_app_password",
+  "from_email": "your_email@gmail.com"
+}
+```
+
+**For Gmail users:**
+- Go to https://myaccount.google.com/apppasswords
+- Create an App Password for "Assessment Tracker"
+- Use the 16-character password in your config file
+
+**Viewing the email log:**
+```bash
+tail -f weekly_reminder.log
+```
+
+**Managing the cron job:**
+```bash
+crontab -l            # View all cron jobs
+crontab -e            # Edit cron jobs
 ```
 
 ## Pre-configured Topics
@@ -272,24 +345,29 @@ Each includes pre-defined key indicators to track.
 
 ```
 assessment-tracker/
-├── tracker.py              # Main tracking script (includes all functionality)
-├── dashboard.py            # Web dashboard server
-├── visualize.py            # Legacy visualization script (still works)
-├── create_demo.py          # Demo data generator
-├── requirements.txt        # Python dependencies
+├── tracker.py                  # Main tracking script (includes all functionality)
+├── dashboard.py                # Web dashboard server
+├── weekly_reminder.py          # Automated email reminder system
+├── setup_weekly_reminder.sh    # Setup script for email automation
+├── visualize.py                # Legacy visualization script (still works)
+├── create_demo.py              # Demo data generator
+├── requirements.txt            # Python dependencies
+├── email_config.json.example   # Example email configuration
 ├── data/
-│   ├── topics.json         # Topic configuration (customizable!)
-│   ├── assessments.json    # Current assessments database
-│   └── history.json        # Historical log of all changes
-├── templates/              # HTML templates for web dashboard
-│   ├── dashboard.html      # Main dashboard view
-│   └── topic_detail.html   # Topic detail view
-├── static/                 # Static assets for web dashboard
+│   ├── topics.json             # Topic configuration (customizable!)
+│   ├── assessments.json        # Current assessments database
+│   └── history.json            # Historical log of all changes
+├── templates/                  # HTML templates for web dashboard
+│   ├── dashboard.html          # Main dashboard view
+│   ├── topic_detail.html       # Topic detail view
+│   ├── update_assessment.html  # Assessment update form
+│   └── add_topic.html          # Add custom topic form
+├── static/                     # Static assets for web dashboard
 │   ├── css/
-│   │   └── dashboard.css   # Dashboard styles
+│   │   └── dashboard.css       # Dashboard styles
 │   └── js/
-│       └── dashboard.js    # Dashboard interactivity
-└── visualizations/         # Generated charts (PNG files)
+│       └── dashboard.js        # Dashboard interactivity
+└── visualizations/             # Generated charts (PNG files)
 ```
 
 ## Data Format
@@ -567,10 +645,14 @@ This tracker complements your geopolitical risk analysis skill:
 - Verify SMTP server and port settings
 - Test with `python3 tracker.py notify --email-config your_config.json`
 
-## Recent Enhancements (v2.0)
+## Recent Enhancements (v2.2)
 
 ✅ **Completed Features:**
-- ✅ **Interactive Web Dashboard** - Real-time browser-based interface (NEW!)
+- ✅ **Interactive Web Dashboard** - Real-time browser-based interface with update forms
+- ✅ **Web-Based Updates** - Update assessments directly from the dashboard
+- ✅ **Web-Based Topic Creation** - Add custom topics via web interface
+- ✅ **Automated Weekly Email Reminders** - Scheduled emails for overdue assessments
+- ✅ **HTML Email Reports** - Beautiful formatted email notifications
 - ✅ Custom topic management (add/edit/remove topics)
 - ✅ Integrated visualization (no separate script needed)
 - ✅ CSV and Markdown export

@@ -17,6 +17,18 @@
     </header>
 
     <main class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    {{ message }}
+                    <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <!-- Status Overview -->
         <section class="status-overview">
             <div class="stat-card">
@@ -124,10 +136,13 @@
                     </div>
 
                     <div class="card-footer">
-                        <a href="/topic/{{ assessment.key }}" class="btn-detail">View Details →</a>
-                        {% if assessment.history_count > 0 %}
-                        <span class="history-count">{{ assessment.history_count }} updates</span>
-                        {% endif %}
+                        <div class="footer-left">
+                            <a href="/topic/{{ assessment.key }}" class="btn-detail">View Details →</a>
+                            {% if assessment.history_count > 0 %}
+                            <span class="history-count">{{ assessment.history_count }} updates</span>
+                            {% endif %}
+                        </div>
+                        <a href="/update/{{ assessment.key }}" class="btn-update">Update Assessment</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -139,6 +154,7 @@
             <h2>Quick Actions</h2>
             <div class="action-buttons">
                 <button onclick="location.reload()" class="btn btn-primary">🔄 Refresh Data</button>
+                <a href="/add-topic" class="btn btn-success">➕ Add Custom Topic</a>
                 <button onclick="window.open('/api/assessments', '_blank')" class="btn btn-secondary">📊 API Data</button>
             </div>
         </section>
