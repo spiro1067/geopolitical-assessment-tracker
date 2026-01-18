@@ -29,32 +29,148 @@ class SecureEmailSender:
         Send email using the most secure method available.
 
         Priority order:
-        1. SendGrid API (if API key available)
-        2. Environment variables (if set)
-        3. email_config.json (if exists)
+        1. Brevo API (if API key available) - 300 emails/day free
+        2. SendGrid API (if API key available) - 100 emails/day free
+        3. Mailjet API (if API keys available) - 200 emails/day free
+        4. Resend API (if API key available) - 100 emails/day free
+        5. Environment variables SMTP (if set)
+        6. email_config.json (if exists)
         """
 
-        # Method 1: Try SendGrid API (most secure for production)
+        # Method 1: Try Brevo API (best free tier - 300/day)
+        if os.getenv('BREVO_API_KEY'):
+            return self._send_via_brevo(subject, html_body, recipients)
+
+        # Method 2: Try SendGrid API (good docs - 100/day)
         if os.getenv('SENDGRID_API_KEY'):
             return self._send_via_sendgrid(subject, html_body, recipients)
 
-        # Method 2: Try environment variables
+        # Method 3: Try Mailjet API (good free tier - 200/day)
+        if os.getenv('MAILJET_API_KEY') and os.getenv('MAILJET_SECRET_KEY'):
+            return self._send_via_mailjet(subject, html_body, recipients)
+
+        # Method 4: Try Resend API (developer-friendly - 100/day)
+        if os.getenv('RESEND_API_KEY'):
+            return self._send_via_resend(subject, html_body, recipients)
+
+        # Method 5: Try environment variables
         if self._has_env_config():
             return self._send_via_env_smtp(subject, html_body, recipients)
 
-        # Method 3: Try email_config.json
+        # Method 6: Try email_config.json
         if self.config_file.exists():
             return self._send_via_config_file(subject, html_body, recipients)
 
         print("❌ No email configuration found!")
-        print("\nAvailable options:")
-        print("1. Set SendGrid API key: export SENDGRID_API_KEY='your-key'")
-        print("2. Set environment variables: export EMAIL_SMTP_SERVER=smtp.gmail.com ...")
-        print("3. Create email_config.json (least secure)")
+        print("\nAvailable FREE options (no password storage required):")
+        print("1. Brevo API (300/day): export BREVO_API_KEY='your-key'")
+        print("2. SendGrid API (100/day): export SENDGRID_API_KEY='your-key'")
+        print("3. Mailjet API (200/day): export MAILJET_API_KEY='key' MAILJET_SECRET_KEY='secret'")
+        print("4. Resend API (100/day): export RESEND_API_KEY='your-key'")
+        print("5. Environment variables: export EMAIL_SMTP_SERVER=... (less secure)")
+        print("6. email_config.json (least secure)")
+        print("\nSee FREE_EMAIL_SERVICES.md for comparison of all free options")
         return False
 
+    def _send_via_brevo(self, subject: str, html_body: str, recipients: list) -> bool:
+        """Send email via Brevo (formerly Sendinblue) API - 300 emails/day free."""
+        try:
+            import sib_api_v3_sdk
+            from sib_api_v3_sdk.rest import ApiException
+
+            configuration = sib_api_v3_sdk.Configuration()
+            configuration.api_key['api-key'] = os.getenv('BREVO_API_KEY')
+
+            api_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
+
+            from_email = os.getenv('EMAIL_FROM', 'noreply@assessmenttracker.com')
+
+            send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(
+                to=[{"email": email} for email in recipients],
+                html_content=html_body,
+                sender={"email": from_email},
+                subject=subject
+            )
+
+            api_instance.send_transac_email(send_smtp_email)
+
+            print(f"✅ Email sent via Brevo to: {', '.join(recipients)}")
+            return True
+
+        except ImportError:
+            print("⚠️  Brevo library not installed. Install with: pip install sib-api-v3-sdk")
+            return False
+        except Exception as e:
+            print(f"❌ Brevo error: {e}")
+            return False
+
+    def _send_via_mailjet(self, subject: str, html_body: str, recipients: list) -> bool:
+        """Send email via Mailjet API - 200 emails/day free."""
+        try:
+            from mailjet_rest import Client
+
+            api_key = os.getenv('MAILJET_API_KEY')
+            api_secret = os.getenv('MAILJET_SECRET_KEY')
+            from_email = os.getenv('EMAIL_FROM', 'noreply@assessmenttracker.com')
+
+            mailjet = Client(auth=(api_key, api_secret), version='v3.1')
+
+            data = {
+                'Messages': [
+                    {
+                        "From": {"Email": from_email},
+                        "To": [{"Email": email} for email in recipients],
+                        "Subject": subject,
+                        "HTMLPart": html_body
+                    }
+                ]
+            }
+
+            result = mailjet.send.create(data=data)
+
+            if result.status_code == 200:
+                print(f"✅ Email sent via Mailjet to: {', '.join(recipients)}")
+                return True
+            else:
+                print(f"❌ Mailjet error: {result.status_code}")
+                return False
+
+        except ImportError:
+            print("⚠️  Mailjet library not installed. Install with: pip install mailjet-rest")
+            return False
+        except Exception as e:
+            print(f"❌ Mailjet error: {e}")
+            return False
+
+    def _send_via_resend(self, subject: str, html_body: str, recipients: list) -> bool:
+        """Send email via Resend API - 100 emails/day free."""
+        try:
+            import resend
+
+            resend.api_key = os.getenv('RESEND_API_KEY')
+            from_email = os.getenv('EMAIL_FROM', 'noreply@assessmenttracker.com')
+
+            params = {
+                "from": from_email,
+                "to": recipients,
+                "subject": subject,
+                "html": html_body
+            }
+
+            resend.Emails.send(params)
+
+            print(f"✅ Email sent via Resend to: {', '.join(recipients)}")
+            return True
+
+        except ImportError:
+            print("⚠️  Resend library not installed. Install with: pip install resend")
+            return False
+        except Exception as e:
+            print(f"❌ Resend error: {e}")
+            return False
+
     def _send_via_sendgrid(self, subject: str, html_body: str, recipients: list) -> bool:
-        """Send email via SendGrid API (recommended for production)."""
+        """Send email via SendGrid API - 100 emails/day free."""
         try:
             from sendgrid import SendGridAPIClient
             from sendgrid.helpers.mail import Mail
