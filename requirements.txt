@@ -6,5 +6,12 @@ matplotlib>=3.7.0
 # Web dashboard
 Flask>=3.0.0
 
+# Email notifications - Secure options (choose one):
+# Option 1: SendGrid API (RECOMMENDED - most secure)
+# sendgrid>=6.10.0
+
+# Option 2: Environment variables or email_config.json
+# (no additional packages needed, uses Python's smtplib)
+
 # Optional: for production deployment
 # gunicorn>=21.0.0

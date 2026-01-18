@@ -259,20 +259,42 @@ pip install Flask --break-system-packages
 
 The tracker includes an automated email reminder system that sends weekly notifications for overdue assessments.
 
-**Setup automated weekly emails:**
+**🔒 SECURITY NOTICE:** For secure email configuration, see **[SECURITY_GUIDE.md](SECURITY_GUIDE.md)**
 
-1. **Create email configuration:**
-```bash
-cp email_config.json.example email_config.json
-nano email_config.json  # Edit with your SMTP details
-```
+**Recommended Setup Methods (in order of security):**
 
-2. **Test the email reminder:**
+1. **SendGrid API (Most Secure - Recommended):**
+   ```bash
+   pip install sendgrid --break-system-packages
+   export SENDGRID_API_KEY='your-api-key'
+   export EMAIL_FROM='your-verified-email@example.com'
+   python3 weekly_reminder.py  # Test it
+   ```
+   ✅ No password storage, instant revocation, better deliverability
+
+2. **Environment Variables (More Secure):**
+   ```bash
+   python3 secure_email.py setup-env  # Follow instructions
+   ```
+   ✅ Credentials not in files, separate from code
+
+3. **email_config.json (Least Secure - Not Recommended):**
+   ```bash
+   cp email_config.json.example email_config.json
+   nano email_config.json  # Edit with your SMTP details
+   ```
+   ⚠️ Plain text passwords, easily compromised
+
+**For detailed security setup, see [SECURITY_GUIDE.md](SECURITY_GUIDE.md)**
+
+**Quick Start (after choosing a method above):**
+
+1. **Test the email reminder:**
 ```bash
 python3 weekly_reminder.py
 ```
 
-3. **Set up automated weekly schedule:**
+2. **Set up automated weekly schedule:**
 ```bash
 ./setup_weekly_reminder.sh
 ```
@@ -294,26 +316,18 @@ Weekly reminders are automatically sent to:
 - Days overdue for each assessment
 - Instructions for updating assessments via dashboard or CLI
 
-**Manual email test:**
+**Check which email method is configured:**
 ```bash
-python3 weekly_reminder.py
+python3 secure_email.py
 ```
 
-**Email Configuration Example:**
-```json
-{
-  "smtp_server": "smtp.gmail.com",
-  "smtp_port": 587,
-  "smtp_user": "your_email@gmail.com",
-  "smtp_password": "your_gmail_app_password",
-  "from_email": "your_email@gmail.com"
-}
+**Security Setup Guides:**
+```bash
+python3 secure_email.py setup-sendgrid  # SendGrid setup (recommended)
+python3 secure_email.py setup-env       # Environment variables setup
 ```
 
-**For Gmail users:**
-- Go to https://myaccount.google.com/apppasswords
-- Create an App Password for "Assessment Tracker"
-- Use the 16-character password in your config file
+**📖 Full security documentation:** [SECURITY_GUIDE.md](SECURITY_GUIDE.md)
 
 **Viewing the email log:**
 ```bash

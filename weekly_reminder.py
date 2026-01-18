@@ -8,16 +8,18 @@ Designed to be run as a cron job every Monday morning.
 Usage:
     python3 weekly_reminder.py
 
-Configuration:
-    Edit email_config.json with your SMTP settings
+Configuration (in order of security):
+    1. Set SENDGRID_API_KEY environment variable (most secure)
+    2. Set EMAIL_* environment variables (more secure)
+    3. Create email_config.json (least secure)
+
+See secure_email.py for setup instructions.
 """
 
 import json
-import smtplib
 from pathlib import Path
 from datetime import datetime
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+from secure_email import email_sender
 
 
 # Email recipients
@@ -238,31 +240,9 @@ def build_email_body(overdue, due_soon, assessments):
     return html
 
 
-def send_email(subject, html_body, recipients, config):
-    """Send HTML email."""
-    try:
-        # Create message
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = subject
-        msg['From'] = config['from_email']
-        msg['To'] = ', '.join(recipients)
-
-        # Attach HTML body
-        html_part = MIMEText(html_body, 'html')
-        msg.attach(html_part)
-
-        # Send via SMTP
-        with smtplib.SMTP(config['smtp_server'], config['smtp_port']) as server:
-            server.starttls()
-            server.login(config['smtp_user'], config['smtp_password'])
-            server.send_message(msg)
-
-        print(f"✅ Email sent successfully to: {', '.join(recipients)}")
-        return True
-
-    except Exception as e:
-        print(f"❌ Failed to send email: {e}")
-        return False
+def send_email(subject, html_body, recipients):
+    """Send HTML email using secure email sender."""
+    return email_sender.send_email(subject, html_body, recipients)
 
 
 def main():
@@ -272,22 +252,8 @@ def main():
     print("="*70)
     print(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
 
-    # Load configuration
-    if not CONFIG_FILE.exists():
-        print("❌ Error: email_config.json not found")
-        print("Please create email_config.json with your SMTP settings")
-        print("\nExample configuration:")
-        print("""{
-  "smtp_server": "smtp.gmail.com",
-  "smtp_port": 587,
-  "smtp_user": "your_email@gmail.com",
-  "smtp_password": "your_app_password",
-  "from_email": "your_email@gmail.com"
-}""")
-        return
-
-    with open(CONFIG_FILE, 'r') as f:
-        config = json.load(f)
+    # Configuration is handled by secure_email.py
+    # It will try: SendGrid → Environment Variables → email_config.json
 
     # Load assessments
     print("Loading assessment data...")
@@ -316,7 +282,7 @@ def main():
 
     # Send email
     print(f"Sending email to {len(RECIPIENTS)} recipient(s)...")
-    success = send_email(subject, html_body, RECIPIENTS, config)
+    success = send_email(subject, html_body, RECIPIENTS)
 
     if success:
         print("\n✅ Weekly reminder sent successfully!")
